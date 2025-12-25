@@ -1,11 +1,12 @@
 import { View ,Text} from "react-native"
+import LoginComponent from "../../components/LoginComponent";
 
 
 const Login=()=>{
     return (
         <View>
             <Text>
-Login
+<LoginComponent/>
             </Text>
         </View>
     )
