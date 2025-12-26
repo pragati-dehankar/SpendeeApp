@@ -1,13 +1,2 @@
-import { View ,Text} from "react-native"
-
-
-const AllGroups=()=>{
-    return (
-        <View>
-            <Text>
-
-            </Text>
-        </View>
-    )
-}
-export default AllGroups;
+import GroupContent from "../../components/groups";
+export default function AllGroups(){ return <GroupContent/> }

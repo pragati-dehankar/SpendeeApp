@@ -11,17 +11,24 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, TextInput } from "react-native-paper";   // <--- change TextInput import
 import { AuthScreen } from "../utils/constants";
+import { useAuth } from "../context/AuthProvider";
 
 const { width } = Dimensions.get("window");
 
 const LoginComponent = () => {
   const navigation = useNavigation();
+  const auth=useAuth()
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async() => {
     console.log({ userId, password });
+    try {
+      await auth.login(Number(userId),password)
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

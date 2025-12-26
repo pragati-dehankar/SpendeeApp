@@ -6,6 +6,6 @@ INSERT INTO users
 `;
 
 export const GET_USER=`
-SELECT * from users
+SELECT id,name,email,phone from users
 WHERE id=?
 `
