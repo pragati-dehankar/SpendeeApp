@@ -4,13 +4,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
   Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";   // <--- change TextInput import
 import { AuthScreen } from "../utils/constants";
 
 const { width } = Dimensions.get("window");
@@ -19,6 +18,7 @@ const LoginComponent = () => {
   const navigation = useNavigation();
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
     console.log({ userId, password });
@@ -34,19 +34,27 @@ const LoginComponent = () => {
         <Text style={styles.subtitle}>Login to continue</Text>
 
         <TextInput
+          mode="outlined"
           style={styles.input}
-          placeholder="User ID / Email"
+          label="User ID / Email"
           value={userId}
           onChangeText={setUserId}
           autoCapitalize="none"
         />
 
         <TextInput
+          mode="outlined"
           style={styles.input}
-          placeholder="Password"
-          secureTextEntry
+          label="Password"
+          secureTextEntry={!showPassword}
           value={password}
           onChangeText={setPassword}
+          right={
+            <TextInput.Icon
+              icon={showPassword ? "eye-off" : "eye"}
+              onPress={() => setShowPassword(!showPassword)}
+            />
+          }
         />
 
         <Button
@@ -73,10 +81,7 @@ const LoginComponent = () => {
 export default LoginComponent;
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    // backgroundColor: "#ffffff",
-  },
+  safe: { flex: 1 },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -95,23 +100,13 @@ const styles = StyleSheet.create({
   },
   input: {
     width: width - 80,
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#d1d5db",
-    borderRadius: 10,
-    paddingHorizontal: 15,
     marginVertical: 10,
-    fontSize: 16,
   },
   loginBtn: {
     width: width - 80,
     marginTop: 20,
     borderRadius: 10,
   },
-  btnContent: {
-    height: 50,
-  },
-  signupBtn: {
-    marginTop: 15,
-  },
+  btnContent: { height: 50 },
+  signupBtn: { marginTop: 15 },
 });

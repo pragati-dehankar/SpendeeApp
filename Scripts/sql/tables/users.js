@@ -4,7 +4,15 @@ CREATE TABLE IF NOT EXISTS users (
   name TEXT NOT NULL,
   email TEXT UNIQUE,
   phone TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL UNIQUE,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   is_registered INTEGER DEFAULT 0
 );
 `;
+
+// export const alterTableUsers=`
+// ALTER TABLE users ADD column password TEXT NOT NULL
+// `
+// export const tableDefUsers=`
+// pragma table_info(users)
+// `

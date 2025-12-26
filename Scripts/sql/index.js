@@ -1,6 +1,6 @@
 import Connection from './connection'
 import { SessionTable } from './tables/session'
-import { UsersTable } from './tables/users'
+import { alterTableUsers, tableDefUsers, UsersTable } from './tables/users'
 
 const getAllTables=async()=>{
     try {
@@ -20,6 +20,7 @@ export const onInitDatabse=async()=>{
     const db=await Connection.getConnection()
     await db.execAsync(UsersTable) 
     await db.execAsync(SessionTable) 
+    // await db.execAsync(alterTableUsers) 
     await getAllTables()
     // return
    } catch (error) {

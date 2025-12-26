@@ -4,30 +4,35 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
   Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";   // <-- FIX HERE
 import { AuthScreen } from "../utils/constants";
+import { useAuth } from "../context/AuthProvider";
 
 const { width } = Dimensions.get("window");
 
 const SignUpComponent = () => {
+  const auth=useAuth()
   const navigation = useNavigation();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword,setShowPassword]
-=useState(false)
-  const handleSignUp = () => {
-    console.log({ userId, password ,phone});
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleSignUp = async() => {
+    console.log({ name, phone, password,email });
+    try {
+      await auth.sigup(name,email,phone,password)
+    } catch (error) {
+      console.log(error);
+      throw error
+    }
   };
-  const togglePasswordVisibility=()=>{
-    setShowPassword((prev)=>!prev)
-  }
 
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
@@ -39,30 +44,42 @@ const SignUpComponent = () => {
         <Text style={styles.subtitle}>Signup to continue</Text>
 
         <TextInput
+          mode="outlined"
           style={styles.input}
-          placeholder="Name"
+          label="Name"
           value={name}
           onChangeText={setName}
-          autoCapitalize="none"
+        />
+        <TextInput
+          mode="outlined"
+          style={styles.input}
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
         />
 
         <TextInput
-        keyboardType="numeric"
+          mode="outlined"
           style={styles.input}
-          placeholder="Phone"
+          label="Phone"
+          keyboardType="numeric"
           value={phone}
           onChangeText={setPhone}
-          autoCapitalize="none"
         />
 
         <TextInput
+          mode="outlined"
           style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-        //   secureTextEntry={!showPassword}
+          label="Password"
+          secureTextEntry={!showPassword}
           value={password}
           onChangeText={setPassword}
-        //   right={<TextInput.Icon icon={showPassword?"eye-off":"eye"}/>}
+          right={
+            <TextInput.Icon
+              icon={showPassword ? "eye-off" : "eye"}
+              onPress={() => setShowPassword(!showPassword)}
+            />
+          }
         />
 
         <Button
@@ -79,7 +96,7 @@ const SignUpComponent = () => {
           style={styles.signupBtn}
           onPress={() => navigation.navigate(AuthScreen.Login)}
         >
-          Already a user? LogIn instead
+          Already a user? Login instead
         </Button>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -89,10 +106,7 @@ const SignUpComponent = () => {
 export default SignUpComponent;
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    // backgroundColor: "#ffffff",
-  },
+  safe: { flex: 1 },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -111,23 +125,13 @@ const styles = StyleSheet.create({
   },
   input: {
     width: width - 80,
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#d1d5db",
-    borderRadius: 10,
-    paddingHorizontal: 15,
     marginVertical: 10,
-    fontSize: 16,
   },
   loginBtn: {
     width: width - 80,
     marginTop: 20,
     borderRadius: 10,
   },
-  btnContent: {
-    height: 50,
-  },
-  signupBtn: {
-    marginTop: 15,
-  },
+  btnContent: { height: 50 },
+  signupBtn: { marginTop: 15 },
 });
