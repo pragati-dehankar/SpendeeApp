@@ -10,12 +10,12 @@ try {
 
     await db.execAsync("BEGIN")
 
-    const group=await db.runAsync(CREATE_NEW_GROUP_QUERY,[name,creator_id])
+    const group=await db.runAsync(CREATE_NEW_GROUP_QUERY,[name,+creator_id])
     console.log("Group created! :",JSON.stringify(group));
     
     const groupId=group.lastInsertedRowId
 
-    await createGroupMembers([creator_id],groupId,db)
+    await createGroupMembers([+creator_id],Number(groupId),db)
     console.log("Group members created");
     console.log("Comitting TXN");
     

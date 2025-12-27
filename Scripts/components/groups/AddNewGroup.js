@@ -2,15 +2,30 @@ import { View, StyleSheet } from "react-native";
 import { useLayoutEffect, useState } from "react";
 import { Button, IconButton, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import {useAuth} from '../../context/AuthProvider'
+import { CreateNewGroup } from "../../sql/group/create";
 
 const AddNewGroup = () => {
+  const {user:{id}}=useAuth()
   const [groupName, setGroupName] = useState("");
   const nav = useNavigation();
 
-  const addNewGroup = () => {
-    if (!groupName.trim()) return alert("Enter group name");
-    alert("Group created: " + groupName);
-    nav.goBack(); // redirect after creating
+
+
+  const addNewGroup = async() => {
+    if(!groupName || groupName.trim()==="") return
+    // if (!groupName.trim()) return alert("Enter group name");
+    // alert("Group created: " + groupName);
+    // nav.goBack(); // redirect after creating
+    console.log("Group Name: ",groupName);
+    try {
+      const groupId=await CreateNewGroup(groupName,+id)
+      alert( `Group created with id: ${groupId}`)
+    } catch (error) {
+      console.log("Error ocurred while creating new group",error);
+      
+    }
+    
   };
 
   useLayoutEffect(() => {
