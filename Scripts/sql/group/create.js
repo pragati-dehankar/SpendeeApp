@@ -1,43 +1,24 @@
-import Connection from '../connection'
-import { createGroupMembers } from '../group-members/create'
-import { CREATE_NEW_GROUP_QUERY } from './queries'
-
 export const CreateNewGroup = async (name, creator_id) => {
-  let db;
+  const db = await Connection.getConnection();
+  
   try {
-    db = await Connection.getConnection();
-    console.log("🚀 Starting TXN");
-    
     await db.execAsync("BEGIN");
 
-    // Insert new group
-    const group = await db.runAsync(CREATE_NEW_GROUP_QUERY, [name, +creator_id]);
-    console.log("Group created:", group);
+    // insert group
+    const res = await db.runAsync(CREATE_NEW_GROUP_QUERY, [name, creator_id]);
+    const groupId = res.lastInsertRowId;  // correct
 
-    // ⛔ FIX HERE — correct key name
-    const groupId = group.lastInsertRowId;   
+    if (!groupId) throw new Error("Insert failed, no groupId returned");
 
-    if (!groupId) throw new Error("⚠ Failed to get groupId");
+    // add user in group members
+    await createGroupMembers([creator_id], groupId, db);
 
-    // Add creator as member
-    await createGroupMembers([+creator_id], Number(groupId), db);
-    console.log("Group members added!");
-
-    console.log("📌 Committing TXN");
     await db.execAsync("COMMIT");
-
     return groupId;
 
-  } catch (error) {
-    console.log("❌ TXN Failed:", error);
-
-    // avoid crash if db is unavailable
-    try { 
-      if (db) await db.execAsync("ROLLBACK");
-    } catch (rollbackErr) {
-      console.log("Rollback error →", rollbackErr);
-    }
-
-    throw error;
+  } catch (err) {
+    await db.execAsync("ROLLBACK").catch(()=>{});
+    console.log("Create Group Failed →", err);
+    throw err;
   }
 };
