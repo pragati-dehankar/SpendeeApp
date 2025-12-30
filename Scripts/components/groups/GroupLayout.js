@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import GroupAppBar from "./GroupAppBar";
 
 const GroupLayout = ({ children }) => {
@@ -6,10 +6,13 @@ const GroupLayout = ({ children }) => {
     <View style={styles.container}>
       <GroupAppBar />
       <Text style={styles.title}>All Groups</Text>
-      <ScrollView>{children}</ScrollView>
+
+      {/* ❌ NO ScrollView here */}
+      {children}
     </View>
   );
 };
+
 export default GroupLayout;
 
 const styles = StyleSheet.create({

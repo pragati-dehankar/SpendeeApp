@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, TextInput } from "react-native-paper";   // <--- change TextInput import
+import { Button, TextInput } from "react-native-paper";
 import { AuthScreen } from "../utils/constants";
 import { useAuth } from "../context/AuthProvider";
 
@@ -17,15 +17,14 @@ const { width } = Dimensions.get("window");
 
 const LoginComponent = () => {
   const navigation = useNavigation();
-  const auth=useAuth()
-  const [userId, setUserId] = useState("");
+  const auth = useAuth();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async() => {
-    console.log({ userId, password });
+  const handleLogin = async () => {
     try {
-      await auth.login(Number(userId),password)
+      await auth.login(email, password); // pass email
     } catch (error) {
       console.log(error);
     }
@@ -43,9 +42,9 @@ const LoginComponent = () => {
         <TextInput
           mode="outlined"
           style={styles.input}
-          label="User ID / Email"
-          value={userId}
-          onChangeText={setUserId}
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
           autoCapitalize="none"
         />
 
@@ -89,31 +88,11 @@ export default LoginComponent;
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 24,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#6b7280",
-    marginBottom: 30,
-  },
-  input: {
-    width: width - 80,
-    marginVertical: 10,
-  },
-  loginBtn: {
-    width: width - 80,
-    marginTop: 20,
-    borderRadius: 10,
-  },
+  container: { flex: 1, justifyContent: "center", alignItems: "center", paddingHorizontal: 24 },
+  title: { fontSize: 30, fontWeight: "600", marginBottom: 8 },
+  subtitle: { fontSize: 16, color: "#6b7280", marginBottom: 30 },
+  input: { width: width - 80, marginVertical: 10 },
+  loginBtn: { width: width - 80, marginTop: 20, borderRadius: 10 },
   btnContent: { height: 50 },
   signupBtn: { marginTop: 15 },
 });

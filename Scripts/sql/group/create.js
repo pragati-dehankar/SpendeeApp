@@ -1,23 +1,29 @@
+import Connection from "../connection";
+import { createGroupMembers } from "../group-members/create";
+import { CREATE_NEW_GROUP_QUERY } from "./queries";
+
 export const CreateNewGroup = async (name, creator_id) => {
   const db = await Connection.getConnection();
-  
+
   try {
     await db.execAsync("BEGIN");
 
-    // insert group
-    const res = await db.runAsync(CREATE_NEW_GROUP_QUERY, [name, creator_id]);
-    const groupId = res.lastInsertRowId;  // correct
+    const res = await db.runAsync(
+      CREATE_NEW_GROUP_QUERY,
+      [name, creator_id]
+    );
 
-    if (!groupId) throw new Error("Insert failed, no groupId returned");
+    const groupId = res.lastInsertRowId;
+    if (!groupId) throw new Error("Failed to insert group");
 
-    // add user in group members
+    // add creator as member
     await createGroupMembers([creator_id], groupId, db);
 
     await db.execAsync("COMMIT");
     return groupId;
 
   } catch (err) {
-    await db.execAsync("ROLLBACK").catch(()=>{});
+    await db.execAsync("ROLLBACK").catch(() => {});
     console.log("Create Group Failed →", err);
     throw err;
   }

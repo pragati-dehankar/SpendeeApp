@@ -1,5 +1,5 @@
 import Connection from '../../connection'
-import { CREATE_USER, GET_USER } from './queries'
+import { CREATE_USER, GET_USER,GET_USER_BY_EMAIL } from './queries'
 
 export const createUser=async(name,email,phone,password)=>{
     try {
@@ -23,4 +23,9 @@ export const getUserById=async(id)=>{
         console.log("Error while getting user by id: ",error);
         throw error
     }
+}
+
+export const getUserByEmail = async (email) => {
+  const db = await Connection.getConnection()
+  return await db.getFirstAsync(GET_USER_BY_EMAIL, [email])
 }
