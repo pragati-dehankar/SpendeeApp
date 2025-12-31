@@ -2,14 +2,13 @@ import { View ,Text} from "react-native"
 import SelectContacts from "../../components/friends/SelectContacts";
 
 
-const GroupMembers=()=>{
+const GroupItemPersons=()=>{
     return (
         <View>
             <Text>
-                    AddMembers
+                  <SelectContacts/>
             </Text>
-           
         </View>
     )
 }
-export default GroupMembers;
+export default GroupItemPersons;

@@ -1,7 +1,11 @@
 import Connection from './connection'
 import { CreateActivityTable } from './tables/activity'
+import { CreateExpensesTable } from './tables/expenses'
+import { CreateExpenseSplitsTable } from './tables/expenses-splits'
+import { CreateTableFriends } from './tables/friends'
 import { CreateGroupTable } from './tables/group'
 import { CreateGroupMembersTable } from './tables/groupMembers'
+import { CreatePaymentTable } from './tables/payments'
 import { SessionTable } from './tables/session'
 import { alterTableUsers, tableDefUsers, UsersTable } from './tables/users'
 
@@ -26,6 +30,10 @@ export const onInitDatabse=async()=>{
     await db.execAsync(CreateGroupTable) 
     await db.execAsync(CreateGroupMembersTable) 
     await db.execAsync(CreateActivityTable) 
+    await db.execAsync(CreateExpensesTable) 
+    await db.execAsync(CreateExpenseSplitsTable) 
+    await db.execAsync(CreateTableFriends) 
+    await db.execAsync(CreatePaymentTable) 
     // await db.execAsync(alterTableUsers) 
     await getAllTables()
     // return
