@@ -4,7 +4,8 @@ VALUES(?,?)
 `;
 
 export const GET_ALL_GROUP_MEMBERS_BY_ID=`
-SELECT * FROM group_members 
+SELECT * FROM group_members gm
+INNER JOIN users u ON gm.user_id=u.id
 WHERE group_id=?
 `
 

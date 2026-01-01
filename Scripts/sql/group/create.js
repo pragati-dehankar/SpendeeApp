@@ -1,3 +1,4 @@
+import { registerUserUnofficial } from "../auth/user/create-user-account";
 import Connection from "../connection";
 import { createGroupMembers } from "../group-members/create";
 import { CREATE_NEW_GROUP_QUERY } from "./queries";
@@ -21,6 +22,27 @@ export const CreateNewGroup = async (name, creator_id) => {
 
     await db.execAsync("COMMIT");
     return groupId;
+
+  } catch (err) {
+    await db.execAsync("ROLLBACK").catch(() => {});
+    console.log("Create Group Failed →", err);
+    throw err;
+  }
+};
+
+
+export const CreateNewGroupMembersTransaction = async (contactIds,groupId) => {
+  
+  const db = await Connection.getConnection();
+  try {
+    await db.execAsync("BEGIN");
+    const userIds=await registerUserUnofficial(contactIds)
+    if(userIds.length>0){
+      await createGroupMembers(userIds,groupId,db)
+    }
+
+    await db.execAsync("COMMIT");
+    // return groupId;
 
   } catch (err) {
     await db.execAsync("ROLLBACK").catch(() => {});

@@ -2,11 +2,14 @@ import { useNavigation } from "@react-navigation/native";
 import { View ,Text, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Chip } from "react-native-paper";
 import { GroupScreens } from "../../utils/constants";
+import { useAppState } from "../../context/AppStateProvider";
 
 const GroupListRenderItem = ({group}) => {
+    const {setSelectedGroup}=useAppState()
     const nav=useNavigation()
     const navigateToGroupscreen=()=>{
-        nav.navigate(GroupScreens.GroupItem,{group})
+        setSelectedGroup(group.id)
+        nav.navigate(GroupScreens.GroupItem)
     }
   return (
     <TouchableOpacity onPress={navigateToGroupscreen} style={styles.conatiner}>

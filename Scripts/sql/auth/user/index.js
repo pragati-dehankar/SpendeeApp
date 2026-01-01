@@ -1,10 +1,10 @@
 import Connection from '../../connection'
 import { CREATE_USER, GET_USER,GET_USER_BY_EMAIL } from './queries'
 
-export const createUser=async(name,email,phone,password)=>{
+export const createUser=async(name,email,phone,password,isRegistered=1)=>{
     try {
         const db=await Connection.getConnection()
-        const result=db.runAsync(CREATE_USER,[name,email,phone,password])
+        const result=db.runAsync(CREATE_USER,[name,email,phone,password,isRegistered])
         console.log(result.lastInsertRowId);
         return await getUserById(result.lastInsertRowId)
     } catch (error) {

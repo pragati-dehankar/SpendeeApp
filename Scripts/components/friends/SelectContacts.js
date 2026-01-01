@@ -25,11 +25,12 @@ const getContactsPermission=async()=>{
 
    return false
 }
-const SelectContacts = () => {
+const SelectContacts = ({selectedContacts,setSelectContacts}) => {
   const [contacts,setContacts]=useState([])
-  const [selectedContacts,setSelectedContacts]=useState([])
+  // const [selectedContacts,setSelectedContacts]=useState([])
   const onItemChange=(data)=>{
-    setSelectedContacts(data)
+    setSelectContacts(data)
+    // onSelectContacts(data)
   }
 
     useEffect(()=>{

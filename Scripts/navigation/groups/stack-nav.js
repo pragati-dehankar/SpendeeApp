@@ -3,10 +3,12 @@ import { GroupScreens } from "../../utils/constants"
 import AllGroups from "../../screens/groups/AllGroups"
 import AddGroup from "../../screens/groups/AddGroup"
 import GroupItem from "../../screens/groups/GroupItem"
-import GroupMembers from "../../screens/groups/GroupMember"
+// import AddGroupMembers from "../../screens/groups/AddGroupMember"
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import GroupItemMain from "../../screens/groups/GroupItemMain"
 import GroupItemPersons from "../../screens/groups/GroupItempersons"
+import AddGroupMembers from "../../screens/groups/GroupMember"
+import AddExpense from "../../screens/groups/AddExpense"
 
 const Stack=createNativeStackNavigator()
 const Tab=createMaterialTopTabNavigator()
@@ -21,7 +23,8 @@ const GroupStackNav=()=>{
         <Stack.Screen name={GroupScreens.AllGroups} component={AllGroups}/>
         <Stack.Screen name={GroupScreens.AddGroup} component={AddGroup}/>
         <Stack.Screen options={{headerShown:true}} name={GroupScreens.GroupItem} component={GroupItemNavigator}/>
-        <Stack.Screen name={GroupScreens.GroupMembers} component={GroupMembers}/>
+        <Stack.Screen options={{headerShown:true,headerShadowVisible:false}} name={GroupScreens.AddGroupMembers} component={AddGroupMembers}/>
+        <Stack.Screen options={{headerShown:true,headerShadowVisible:false}} name={GroupScreens.GroupAddExpense} component={AddExpense}/>
     </Stack.Navigator>
 }
 

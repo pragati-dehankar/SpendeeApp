@@ -4,9 +4,10 @@ export const GroupScreens={
    AllGroups:"AllGroups",
    GroupItem:"GroupItem",
    AddGroup:"AddGroup",
-   GroupMembers:"GroupMembers",
+   AddGroupMembers:"AddGroupMembers",
    GroupItemPersons:"GroupItemPersons",
-   GroupItemMain:"GroupItemMain"
+   GroupItemMain:"GroupItemMain",
+   GroupAddExpense:"GroupAddExpense"
 }
 export const FriendScreens={
    AllFriends:"AllFriends",

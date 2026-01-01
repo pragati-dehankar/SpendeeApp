@@ -8,6 +8,7 @@ import { onErrorInitializationDatabse, onInitDatabse } from './Scripts/sql';
 import Fallback from './Scripts/screens/fallback/fallback';
 import { DatabaseName } from './Scripts/utils/constants';
 import { Provider as PaperProvider } from "react-native-paper";
+import AppStateProvider from './Scripts/context/AppStateProvider';
 
 export default function App() {
   return (
@@ -25,7 +26,9 @@ export default function App() {
             onError={onErrorInitializationDatabse}
           >
             <AuthProvider>
+              <AppStateProvider>
               <MainNavigator />
+              </AppStateProvider>
             </AuthProvider>
           </SQLiteProvider>
 
