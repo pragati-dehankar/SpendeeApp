@@ -36,6 +36,6 @@ const GroupItemPersons = () => {
         {JSON.stringify(members)}
       </Text>
     </View>
-  );
+  );    
 };
 export default GroupItemPersons;
