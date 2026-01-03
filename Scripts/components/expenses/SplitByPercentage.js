@@ -1,46 +1,84 @@
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
 import { Button, Modal, Portal } from "react-native-paper";
 import { useEffect, useState } from "react";
 import SelectPercentage from "./SelectPercentage";
 
-const SplitByPercentage = ({ visible, users, onSubmit }) => {
+const generateSplitData = (users) => {
+  const data = {};
+  if (!users || users.length === 0) return data;
+
+  const equalSplit = +(100 / users.length).toFixed(2);
+
+  users.forEach((user) => {
+    data[user.id] = equalSplit;
+  });
+
+  return data;
+};
+
+const SplitByPercentage = ({ visible, users = [], onSubmit }) => {
   const [splitData, setSplitData] = useState({});
 
+  // Initialize split when modal opens
   useEffect(() => {
-    if (users.length > 0) {
-      const value = 100 / users.length;
-      const obj = {};
-      users.forEach((u) => (obj[u.id] = value.toFixed(2)));
-      setSplitData(obj);
+    if (visible && users.length > 0) {
+      setSplitData(generateSplitData(users));
     }
-  }, [users]);
+  }, [visible, users]);
 
-  const total = Object.values(splitData).reduce(
-    (s, v) => s + Number(v),
-    0
-  );
+  // ✅ FIXED validation (floating point safe)
+  const isInvalidPercentage = () => {
+    const total = Object.values(splitData).reduce(
+      (sum, val) => sum + Number(val || 0),
+      0
+    );
+    return Math.round(total) !== 100;
+  };
+
+  const handleUpdate = () => {
+    onSubmit(splitData);
+  };
 
   return (
     <Portal>
-      <Modal visible={visible} contentContainerStyle={styles.full}>
+      <Modal
+        visible={visible}
+        onDismiss={() => onSubmit(null)}
+        contentContainerStyle={styles.modal}
+      >
+        <Text style={styles.heading}>Split by Percentage</Text>
+
         <FlatList
           data={users}
-          keyExtractor={(i) => i.id.toString()}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <SelectPercentage
               user={item}
-              value={splitData[item.id]}
-              onChange={(v) =>
-                setSplitData((p) => ({ ...p, [item.id]: v }))
+              splitPercentage={splitData[item.id]}
+              updateSplitPercentange={(val) =>
+                setSplitData((prev) => ({
+                  ...prev,
+                  [item.id]: Number(val),
+                }))
               }
             />
           )}
         />
 
+        <Text style={styles.total}>
+          Total:{" "}
+          {Object.values(splitData).reduce(
+            (sum, v) => sum + Number(v || 0),
+            0
+          )}
+          %
+        </Text>
+
         <Button
           mode="contained"
-          disabled={total !== 100}
-          onPress={() => onSubmit(splitData)}
+          disabled={isInvalidPercentage()}
+          onPress={handleUpdate}
+          style={styles.button}
         >
           Update
         </Button>
@@ -52,10 +90,25 @@ const SplitByPercentage = ({ visible, users, onSubmit }) => {
 export default SplitByPercentage;
 
 const styles = StyleSheet.create({
-  full: {
-    flex: 1,
+  modal: {
     backgroundColor: "#fff",
     padding: 20,
-    justifyContent: "space-between",
+    margin: 20,
+    borderRadius: 12,
+    maxHeight: "90%",
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  total: {
+    textAlign: "center",
+    marginVertical: 10,
+    fontWeight: "500",
+  },
+  button: {
+    marginTop: 10,
   },
 });

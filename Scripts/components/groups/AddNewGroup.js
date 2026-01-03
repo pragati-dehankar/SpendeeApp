@@ -5,19 +5,24 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../context/AuthProvider";
 import { CreateNewGroup } from "../../sql/group/create";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TabScreens } from "../../utils/constants";
 
 const AddNewGroup = () => {
   const { user } = useAuth();
   const [groupName, setGroupName] = useState("");
-  const nav = useNavigation();
+  const navigation = useNavigation();
 
   const addNewGroup = async () => {
-    if (!groupName.trim()) return alert("Enter group name");
+    if (!groupName.trim()) {
+      alert("Enter group name");
+      return;
+    }
 
     try {
       await CreateNewGroup(groupName, user.id);
-      nav.navigate(TabScreens.Groups);
+
+      // ✅ CORRECT: return to AllGroups inside same stack
+      navigation.goBack();
+
     } catch (err) {
       console.log("Error adding group:", err);
       alert("Error adding group");
@@ -25,11 +30,11 @@ const AddNewGroup = () => {
   };
 
   useLayoutEffect(() => {
-    nav.setOptions({
+    navigation.setOptions({
       headerShown: true,
       title: "New Group",
     });
-  }, []);
+  }, [navigation]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

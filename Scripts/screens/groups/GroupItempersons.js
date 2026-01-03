@@ -1,41 +1,42 @@
 import { View, Text } from "react-native";
-import SelectContacts from "../../components/friends/SelectContacts";
 import { useAppState } from "../../context/AppStateProvider";
-import { useLayoutEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import { getMembersOfGroup } from "../../sql/group-members/get";
 import { Button } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
 import { GroupScreens } from "../../utils/constants";
 
 const GroupItemPersons = () => {
-    const nav=useNavigation()
-  const [members, setMembers] = useState([]);
+  const nav = useNavigation();
   const { selectedGroup } = useAppState();
-  console.log(selectedGroup);
+  const [members, setMembers] = useState([]);
 
-  useLayoutEffect(() => {
-    getMembersOfGroup(+selectedGroup)
-      .then(setMembers)
-      .catch((err) => console.log(err));
-  }, []);
+  // 🔁 Reload EVERY TIME screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      if (!selectedGroup?.id) return;
 
-  const navigateToAddmembers=()=>{
-    nav.navigate(GroupScreens.AddGroupMembers,{members})
-  }
+      getMembersOfGroup(selectedGroup.id)
+        .then(setMembers)
+        .catch(console.log);
+    }, [selectedGroup])
+  );
+
   return (
     <View>
       <Button
-        onPress={navigateToAddmembers}
-        style={{ width: 300, marginVertical: 10, marginHorizontal: "auto" }}
         mode="contained-tonal"
+        onPress={() => nav.navigate(GroupScreens.AddGroupMembers)}
       >
-        Add New members
+        Add New Members
       </Button>
-      <Text>GroupItemPersons</Text>
+
+      <Text>Group Members</Text>
       <Text style={{ borderWidth: 1, padding: 10 }}>
-        {JSON.stringify(members)}
+        {JSON.stringify(members, null, 2)}
       </Text>
     </View>
-  );    
+  );
 };
+
 export default GroupItemPersons;

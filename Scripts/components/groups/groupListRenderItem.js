@@ -1,47 +1,53 @@
 import { useNavigation } from "@react-navigation/native";
-import { View ,Text, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { Chip } from "react-native-paper";
 import { GroupScreens } from "../../utils/constants";
 import { useAppState } from "../../context/AppStateProvider";
 
-const GroupListRenderItem = ({group}) => {
-    const {setSelectedGroup}=useAppState()
-    const nav=useNavigation()
-    const navigateToGroupscreen=()=>{
-        setSelectedGroup(group.id)
-        nav.navigate(GroupScreens.GroupItem)
-    }
+const GroupListRenderItem = ({ group }) => {
+  const { setSelectedGroup } = useAppState();
+  const nav = useNavigation();
+
+  const navigateToGroupscreen = () => {
+    setSelectedGroup(group);           // ✅ FULL OBJECT
+    nav.navigate(GroupScreens.GroupItem);
+  };
+
   return (
-    <TouchableOpacity onPress={navigateToGroupscreen} style={styles.conatiner}>
-        {/* <Text>{JSON.stringify(group)}</Text> */}
-        <View style={styles.itemContainer}>
-           <View><Text>{group.group_name}</Text>
-            <Text>Created At: {new Date(group.created_at).toLocaleDateString()}</Text></View> 
-            <Chip>{4}</Chip>
-        </View>
+    <TouchableOpacity onPress={navigateToGroupscreen} style={styles.container}>
+      <View>
+        <Text>{group.group_name}</Text>
+        <Text>Created At: {new Date(group.created_at).toLocaleDateString()}</Text>
+      </View>
+      <Chip>Members</Chip>
     </TouchableOpacity>
   );
 };
+
 export default GroupListRenderItem;
 
-const styles=StyleSheet.create({
-    conatiner:{
-        marginVertical:10,
-        padding:5,
-        borderWidth:1,
-        borderRadius:10,
-        width:Dimensions.get('window').width-50,
-        // justifyContent:'center',
-        // alignItems:'center',
-        margin:'auto',
-        backgroundColor:'$1e2420',
-        shadowColor:'#0000',
-        shadowOffset:{height:10},
-        shadowOpacity:10,
-        shadowRadius:2,
-        elevation:10
-        },
-    itemContainer:{
-       flex:1
-    }
-})
+const styles = StyleSheet.create({
+  container: {
+    marginVertical: 10,
+    padding: 14,
+    borderRadius: 14,
+    width: Dimensions.get("window").width - 40,
+    alignSelf: "center",
+    backgroundColor: "#ffffff",
+
+    // Android shadow
+    elevation: 4,
+
+    // iOS shadow
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+
+    // layout
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+});
+

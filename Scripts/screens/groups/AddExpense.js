@@ -8,7 +8,7 @@ import { getMembersOfGroup } from "../../sql/group-members/get";
 const SplitType = { percentage: "percentage", equally: "equally" };
 
 const AddExpense = () => {
-  const { selectedGroup } = useAppState();
+  const { selectedGroup } = useAppState(); // ✅ full object
   const [users, setUsers] = useState([]);
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
@@ -16,13 +16,41 @@ const AddExpense = () => {
   const [showModal, setShowModal] = useState(false);
   const [splitResult, setSplitResult] = useState(null);
 
+  // ✅ FIXED EFFECT
   useLayoutEffect(() => {
-    getMembersOfGroup(selectedGroup)
+    if (!selectedGroup?.id) return;
+
+    getMembersOfGroup(selectedGroup.id)
       .then((rows) =>
-        setUsers(rows.map((r) => ({ id: r.user_id, name: r.name })))
+        setUsers(
+          rows.map((r) => ({
+            id: r.user_id,
+            name: r.name,
+          }))
+        )
       )
       .catch(console.log);
-  }, []);
+  }, [selectedGroup]);
+
+  // ✅ equal split calculation
+  const getEqualSplit = () => {
+    if (!amount || users.length === 0) return null;
+
+    const perUser = Number(amount) / users.length;
+    return users.map((u) => ({
+      userId: u.id,
+      name: u.name,
+      amount: perUser,
+    }));
+  };
+
+  const handleCreateSplit = () => {
+    if (splitType === SplitType.equally) {
+      console.log("Equal Split:", getEqualSplit());
+    } else {
+      console.log("Percentage Split:", splitResult);
+    }
+  };
 
   return (
     <PaperProvider>
@@ -78,9 +106,14 @@ const AddExpense = () => {
           />
         </View>
 
-        <Button mode="contained" onPress={() => console.log(splitResult)}>
+        <Button mode="contained" onPress={handleCreateSplit}>
           Create Split
         </Button>
+
+        {/* DEBUG */}
+        <Text style={{ marginTop: 10 }}>
+          Members: {users.map((u) => u.name).join(", ")}
+        </Text>
       </View>
     </PaperProvider>
   );
