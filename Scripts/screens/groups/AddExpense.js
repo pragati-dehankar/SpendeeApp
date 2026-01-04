@@ -4,11 +4,12 @@ import { Button, Chip, Icon, PaperProvider, TextInput } from "react-native-paper
 import SplitByPercentage from "../../components/expenses/SplitByPercentage";
 import { useAppState } from "../../context/AppStateProvider";
 import { getMembersOfGroup } from "../../sql/group-members/get";
+import ExpenseDetails from "../../components/expenses/ExpenseDetails";
 
 const SplitType = { percentage: "percentage", equally: "equally" };
 
 const AddExpense = () => {
-  const { selectedGroup } = useAppState(); // ✅ full object
+  const { selectedGroup } = useAppState();
   const [users, setUsers] = useState([]);
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
@@ -16,41 +17,31 @@ const AddExpense = () => {
   const [showModal, setShowModal] = useState(false);
   const [splitResult, setSplitResult] = useState(null);
 
-  // ✅ FIXED EFFECT
   useLayoutEffect(() => {
     if (!selectedGroup?.id) return;
 
     getMembersOfGroup(selectedGroup.id)
       .then((rows) =>
-        setUsers(
-          rows.map((r) => ({
-            id: r.user_id,
-            name: r.name,
-          }))
-        )
+        setUsers(rows.map((r) => ({ id: r.user_id, name: r.name })))
       )
       .catch(console.log);
   }, [selectedGroup]);
 
-  // ✅ equal split calculation
-  const getEqualSplit = () => {
-    if (!amount || users.length === 0) return null;
+  const getEqualSplitPercentage = () => {
+    if (!users.length) return null;
+    const percent = 100 / users.length;
 
-    const perUser = Number(amount) / users.length;
-    return users.map((u) => ({
-      userId: u.id,
-      name: u.name,
-      amount: perUser,
-    }));
+    const data = {};
+    users.forEach((u) => {
+      data[u.id] = percent;
+    });
+    return data;
   };
 
-  const handleCreateSplit = () => {
-    if (splitType === SplitType.equally) {
-      console.log("Equal Split:", getEqualSplit());
-    } else {
-      console.log("Percentage Split:", splitResult);
-    }
-  };
+  const expenseData =
+    splitType === SplitType.equally
+      ? getEqualSplitPercentage()
+      : splitResult;
 
   return (
     <PaperProvider>
@@ -106,11 +97,16 @@ const AddExpense = () => {
           />
         </View>
 
-        <Button mode="contained" onPress={handleCreateSplit}>
-          Create Split
-        </Button>
+        <Button mode="contained">Create Split</Button>
 
-        {/* DEBUG */}
+        {expenseData && amount && (
+          <ExpenseDetails
+            expenseData={expenseData}
+            totalAmount={Number(amount)}
+            users={users}
+          />
+        )}
+
         <Text style={{ marginTop: 10 }}>
           Members: {users.map((u) => u.name).join(", ")}
         </Text>
