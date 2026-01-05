@@ -5,6 +5,10 @@ import SplitByPercentage from "../../components/expenses/SplitByPercentage";
 import { useAppState } from "../../context/AppStateProvider";
 import { getMembersOfGroup } from "../../sql/group-members/get";
 import ExpenseDetails from "../../components/expenses/ExpenseDetails";
+import { addNewExpense } from "../../sql/expenses/add";
+import { useAuth } from "../../context/AuthProvider";
+import { Alert } from "react-native";
+
 
 const SplitType = { percentage: "percentage", equally: "equally" };
 
@@ -16,6 +20,7 @@ const AddExpense = () => {
   const [splitType, setSplitType] = useState(SplitType.equally);
   const [showModal, setShowModal] = useState(false);
   const [splitResult, setSplitResult] = useState(null);
+  const {user:{id}}=useAuth()
 
   useLayoutEffect(() => {
     if (!selectedGroup?.id) return;
@@ -42,6 +47,26 @@ const AddExpense = () => {
     splitType === SplitType.equally
       ? getEqualSplitPercentage()
       : splitResult;
+
+
+
+
+const createSplitHandler = async () => {
+  try {
+    await addNewExpense(
+      expenseData,
+      Number(amount),
+      desc,
+      id,
+      selectedGroup.id
+    );
+
+    alert("Expense added successfully");
+  } catch (err) {
+    console.log(err);
+    alert(err.message);
+  }
+};
 
   return (
     <PaperProvider>
@@ -97,7 +122,7 @@ const AddExpense = () => {
           />
         </View>
 
-        <Button mode="contained">Create Split</Button>
+        <Button mode="contained" onPress={createSplitHandler}>Create Split</Button>
 
         {expenseData && amount && (
           <ExpenseDetails

@@ -31,3 +31,8 @@ export const AccountScreen={
     AccountDetails:"AccountDetails"
 }
 export const DatabaseName='splits.db'
+
+export const PaymentStatus={
+   PENDING:"PENDING",
+   COMPLETE:"COMPLETE"
+}
