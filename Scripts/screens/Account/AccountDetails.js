@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Button } from "react-native";
 import { useAuth } from "../../context/AuthProvider";
 
 const AccountDetails = () => {
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, logout } = useAuth();
 
-  // Loading state or user not available
+  // Loading state
   if (!isLoggedIn || !user) {
     return (
       <View style={styles.center}>
@@ -38,6 +38,11 @@ const AccountDetails = () => {
         <Text style={styles.label}>User ID:</Text>
         <Text style={styles.value}>{user.id}</Text>
       </View>
+
+      {/* ✅ FIXED LOGOUT BUTTON */}
+      <View style={{ marginTop: 20 }}>
+        <Button title="Logout" onPress={logout} />
+      </View>
     </View>
   );
 };
@@ -45,10 +50,29 @@ const AccountDetails = () => {
 export default AccountDetails;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  heading: { fontSize: 24, fontWeight: "700", marginBottom: 20 },
-  detail: { flexDirection: "row", marginVertical: 8 },
-  label: { fontWeight: "600", width: 100 },
-  value: { flex: 1 },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginBottom: 20,
+  },
+  detail: {
+    flexDirection: "row",
+    marginVertical: 8,
+  },
+  label: {
+    fontWeight: "600",
+    width: 100,
+  },
+  value: {
+    flex: 1,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
