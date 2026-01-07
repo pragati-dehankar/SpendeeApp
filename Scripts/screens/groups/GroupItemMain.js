@@ -5,6 +5,7 @@ import { GroupScreens } from "../../utils/constants";
 import { useLayoutEffect, useState } from "react";
 import { getExpensesOfGroup } from "../../sql/expenses/get";
 import { useAppState } from "../../context/AppStateProvider";
+import GroupExpenselist from "../../components/groups/GroupExpenseList";
 
 const GroupItemMain = () => {
   const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ const GroupItemMain = () => {
   ) : (
     <View style={styles.container}>
       <Text>grou[ItemMain]</Text>
+      <GroupExpenselist expenses={expense} />
       <FAB
         onPress={navigatoToGroupExpense}
         style={styles.fab}
