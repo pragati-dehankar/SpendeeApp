@@ -12,6 +12,7 @@ import { ActivityIndicator, Button, Chip, Icon } from "react-native-paper";
 import { getExpensesSplits } from "../../sql/expenses/get";
 import { PaymentStatus } from "../../utils/constants";
 import {useAuth} from '../../context/AuthProvider'
+import { updatePaymentRecord } from "../../sql/payments/update";
 
 const RenderItem=({data,expense,userId})=>{
   const isUserDuePending=()=>{
@@ -19,6 +20,16 @@ const RenderItem=({data,expense,userId})=>{
       return true
      }
     return false
+  }
+  const settleUsersDues=async()=>{
+     try {
+      await updatePaymentRecord(expense.id,userId)
+      alert("SUCCESS")
+     } catch (error) {
+      alert("ERROR")
+      console.log(error);
+      
+     }
   }
  return (
     <View style={{margin:10,
@@ -41,7 +52,7 @@ const RenderItem=({data,expense,userId})=>{
         color="#0B132B" size={20} name={"hourglass"}
         />
         </View>
-        {isUserDuePending() && <Button onPress={()=>alert("SETTLE AMOUNT")} mode="elevated" textColor="black">Settle</Button>}
+        {isUserDuePending() && <Button onPress={settleUsersDues} mode="elevated" textColor="black">Settle</Button>}
     </View>
  )
 }

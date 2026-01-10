@@ -28,3 +28,8 @@ LEFT JOIN payments p
 WHERE es.expense_id = ?
 `;
 
+export const UPDATE_EXPENSE_SETTLEMET=`
+UPDATE expenses
+SET is_settled=1
+WHERE id=?
+`
