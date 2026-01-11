@@ -14,6 +14,7 @@ export const getExpensesOfGroup=async(groupId)=>{
    }
 }
 
+
 export const getExpensesSplits = async (expenseId) => {
   try {
     const db = await Connection.getConnection();
@@ -29,6 +30,7 @@ export const getExpensesSplits = async (expenseId) => {
     throw error;
   }
 };
+
 
 
 export const getPaymentStatusOfExpense=async(expenseId)=>{

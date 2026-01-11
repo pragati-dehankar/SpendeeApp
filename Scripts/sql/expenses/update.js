@@ -1,18 +1,10 @@
 import Connection from "../connection";
-import { UPDATE_EXPENSE_SETTLEMET } from "./query";
+import { UPDATE_EXPENSE_SETTLEMENT } from "./query";
 
-export const updateExpenseSettlement=async(expenseId)=>{
-     try {
-        const db = await Connection.getConnection();
-        const result = await db.runAsync(
-          UPDATE_EXPENSE_SETTLEMET,
-          [expenseId]
-        );
-    
-        console.log("updated expense details ",expenseId, JSON.stringify(result));
-        return result;
-      } catch (error) {
-        console.log("Error in updateExpenseSettlement:", error);
-        throw error;
-      }
-}
+export const updateExpenseSettlement = async (expenseId) => {
+  const db = await Connection.getConnection();
+  return await db.runAsync(
+    UPDATE_EXPENSE_SETTLEMENT,
+    [expenseId]
+  );
+};

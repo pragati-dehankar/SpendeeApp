@@ -1,17 +1,19 @@
 export const CREATE_NEW_EXPENSE_QUERY = `
 INSERT INTO expenses (description, amount, paid_by, group_id, is_settled)
-VALUES( ?, ?, ?, ?, ?)
-`;
-export const CREATE_NEW_EXPENSE_SPLITS_QUERY = `
-INSERT INTO expense_splits (expense_id, user_id, amount_owed)
-VALUES( ?, ?, ?);
+VALUES (?, ?, ?, ?, ?)
 `;
 
-export const GET_EXPENSE_OF_A_GROUP=`
-SELECT e.*, u.name FROM expenses e
-INNER JOIN users u ON u.id =e.paid_by
-WHERE group_id =?
-`
+export const CREATE_NEW_EXPENSE_SPLITS_QUERY = `
+INSERT INTO expense_splits (expense_id, user_id, amount_owed)
+VALUES (?, ?, ?)
+`;
+
+export const GET_EXPENSE_OF_A_GROUP = `
+SELECT e.*, u.name 
+FROM expenses e
+INNER JOIN users u ON u.id = e.paid_by
+WHERE e.group_id = ?
+`;
 
 export const GET_SPLITS_OF_EXPENSE = `
 SELECT 
@@ -28,8 +30,8 @@ LEFT JOIN payments p
 WHERE es.expense_id = ?
 `;
 
-export const UPDATE_EXPENSE_SETTLEMET=`
+export const UPDATE_EXPENSE_SETTLEMENT = `
 UPDATE expenses
-SET is_settled=1
-WHERE id=?
-`
+SET is_settled = 1
+WHERE id = ?
+`;
