@@ -5,29 +5,39 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../context/AuthProvider";
 import { CreateNewGroup } from "../../sql/group/create";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { isGroupNameExists } from "../../sql/group/get";
+
 
 const AddNewGroup = () => {
   const { user } = useAuth();
   const [groupName, setGroupName] = useState("");
   const navigation = useNavigation();
 
-  const addNewGroup = async () => {
-    if (!groupName.trim()) {
-      alert("Enter group name");
+ const addNewGroup = async () => {
+  const cleanName = groupName.trim();
+
+  if (!cleanName) {
+    alert("Enter group name");
+    return;
+  }
+
+  try {
+    const exists = await isGroupNameExists(cleanName);
+
+    if (exists) {
+      alert("Group already exists");
       return;
     }
 
-    try {
-      await CreateNewGroup(groupName, user.id);
+    await CreateNewGroup(cleanName, user.id);
 
-      // ✅ CORRECT: return to AllGroups inside same stack
-      navigation.goBack();
+    navigation.goBack();
+  } catch (err) {
+    console.log("Error adding group:", err);
+    alert("Something went wrong. Please try again.");
+  }
+};
 
-    } catch (err) {
-      console.log("Error adding group:", err);
-      alert("Error adding group");
-    }
-  };
 
   useLayoutEffect(() => {
     navigation.setOptions({

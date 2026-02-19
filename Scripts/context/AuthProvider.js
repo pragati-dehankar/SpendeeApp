@@ -93,28 +93,34 @@ const login = async (email, password) => {
 };
 
 
-  const sigup = async (name, email, phone, password) => {
-    if (!isStringValid([name, email, phone, password])) {
-      console.log("Input params were empty");
+ const sigup = async (name, email, phone, password) => {
+  if (!isStringValid([name, email, phone, password])) {
+    alert("Fill all fields");
+    return;
+  }
+
+  try {
+    const dbUser = await createUser(name, email, phone, password);
+
+    if (!dbUser) {
+      alert("Signup failed");
       return;
     }
-    try {
-      const dbUser = await createUser(name, email, phone, password);
-      console.log("User is created successfully");
 
-      console.log("creating session!");
-      await deleteSession();
-      await createNewSession(dbUser?.id);
+    await deleteSession();
+    await createNewSession(dbUser.id);
 
-      setUser(dbUser);
-      setIsLoggedIn(true);
-      await AsyncStorage.setItem("user", JSON.stringify(dbUser)); // persist
-      console.log("Session created and user persisted");
-    } catch (error) {
-      console.log("Error while signUp: ", error);
-      throw error;
-    }
-  };
+    setUser(dbUser);
+    setIsLoggedIn(true);
+
+    await AsyncStorage.setItem("user", JSON.stringify(dbUser));
+
+  } catch (error) {
+    console.log("Signup error", error);
+    alert("User already exists or something went wrong");
+  }
+};
+
 
   const logout = async () => {
     try {

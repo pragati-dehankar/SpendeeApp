@@ -40,3 +40,4 @@ export const getMembersOfGroup = async (groupId) => {
     throw error;
   }
 };
+

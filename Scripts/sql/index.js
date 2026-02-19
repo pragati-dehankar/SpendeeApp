@@ -34,6 +34,7 @@ export const onInitDatabse=async()=>{
     await db.execAsync(CreateExpenseSplitsTable) 
     await db.execAsync(CreateTableFriends) 
     await db.execAsync(CreatePaymentTable) 
+    
     // await db.execAsync(alterTableUsers) 
     await getAllTables()
     // return

@@ -1,13 +1,14 @@
 import { PaymentStatus } from "../../utils/constants";
 
-export const CREATE_NEW_PAYMENT_QUERY=`
+export const CREATE_NEW_PAYMENT_QUERY = `
 INSERT INTO payments (payer_id, payee_id, amount, expense_id, status)
 VALUES (?, ?, ?, ?, ?)
 `;
 
+
 export const UPDATE_PAYMENT_QUERY = `
 UPDATE payments
-SET status = ?
+SET status = 'COMPLETE'
 WHERE expense_id = ? AND payee_id = ?
 `;
 

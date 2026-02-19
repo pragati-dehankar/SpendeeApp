@@ -5,3 +5,8 @@ VALUES (?, ?);
 
 
 export const GET_ALL_GROUPS=`SELECT * FROM groups`
+
+export const DELETE_GROUP = `
+DELETE FROM groups
+WHERE id = ?
+`;

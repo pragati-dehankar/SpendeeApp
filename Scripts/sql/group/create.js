@@ -3,7 +3,11 @@ import Connection from "../connection";
 import { createGroupMembers } from "../group-members/create";
 import { CREATE_NEW_GROUP_QUERY } from "./queries";
 
+
+
+
 export const CreateNewGroup = async (name, creator_id) => {
+  
   const db = await Connection.getConnection();
 
   try {

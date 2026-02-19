@@ -1,17 +1,29 @@
 import Connection from '../../connection'
 import { CREATE_USER, GET_USER,GET_USER_BY_EMAIL } from './queries'
 
-export const createUser=async(name,email,phone,password,isRegistered=1)=>{
-    try {
-        const db=await Connection.getConnection()
-        const result=db.runAsync(CREATE_USER,[name,email,phone,password,isRegistered])
-        console.log(result.lastInsertRowId);
-        return await getUserById(result.lastInsertRowId)
-    } catch (error) {
-        console.log("Error creating new user",error);
-        throw error
-    }
-}
+
+
+export const createUser = async (name, email, phone, password) => {
+  const db = await Connection.getConnection();
+
+  const res = await db.runAsync(
+    `
+    INSERT INTO users (name, email, phone, password)
+    VALUES (?, ?, ?, ?)
+    `,
+    [name, email, phone, password]
+  );
+
+  const insertedId = res.lastInsertRowId;
+
+  const user = await db.getFirstAsync(
+    `SELECT id, name, email, phone FROM users WHERE id = ?`,
+    [insertedId]
+  );
+
+  return user; // ✅ MUST RETURN USER
+};
+
 
 export const getUserById=async(id)=>{
     try {

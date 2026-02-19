@@ -1,48 +1,76 @@
 import React from "react";
-import { View, Text, StyleSheet, ActivityIndicator, Button } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { useAuth } from "../../context/AuthProvider";
+import { Avatar, Card, Button, Divider } from "react-native-paper";
 
 const AccountDetails = () => {
-  const { user, isLoggedIn, logout } = useAuth();
+  const { user, authLoading, logout } = useAuth();
 
-  // Loading state
-  if (!isLoggedIn || !user) {
+  if (authLoading) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
-        <Text style={{ marginTop: 10 }}>Loading user details...</Text>
+        <Text style={{ marginTop: 10 }}>Checking session...</Text>
+      </View>
+    );
+  }
+
+  if (!user) {
+    return (
+      <View style={styles.center}>
+        <Text>Please login</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Account Details</Text>
 
-      <View style={styles.detail}>
-        <Text style={styles.label}>Name:</Text>
-        <Text style={styles.value}>{user.name}</Text>
+      {/* 👤 PROFILE HEADER */}
+      <View style={styles.profileSection}>
+        <Avatar.Text
+          size={80}
+          label={user.name?.charAt(0).toUpperCase()}
+        />
+        <Text style={styles.name}>{user.name}</Text>
+        <Text style={styles.email}>{user.email}</Text>
       </View>
 
-      <View style={styles.detail}>
-        <Text style={styles.label}>Email:</Text>
-        <Text style={styles.value}>{user.email}</Text>
-      </View>
+      {/* 📄 DETAILS CARD */}
+      <Card style={styles.card}>
+        <Card.Content>
 
-      <View style={styles.detail}>
-        <Text style={styles.label}>Phone:</Text>
-        <Text style={styles.value}>{user.phone}</Text>
-      </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Phone</Text>
+            <Text style={styles.value}>{user.phone}</Text>
+          </View>
 
-      <View style={styles.detail}>
-        <Text style={styles.label}>User ID:</Text>
-        <Text style={styles.value}>{user.id}</Text>
-      </View>
+          <Divider style={styles.divider} />
 
-      {/* ✅ FIXED LOGOUT BUTTON */}
-      <View style={{ marginTop: 20 }}>
-        <Button title="Logout" onPress={logout} />
-      </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>User ID</Text>
+            <Text style={styles.value}>{user.id}</Text>
+          </View>
+
+        </Card.Content>
+      </Card>
+
+      {/* 🚪 LOGOUT BUTTON */}
+      <Button
+        mode="contained"
+        icon="logout"
+        style={styles.logoutBtn}
+        contentStyle={{ paddingVertical: 6 }}
+        onPress={logout}
+      >
+        Logout
+      </Button>
+
     </View>
   );
 };
@@ -53,23 +81,53 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: "#f6f7fb",
   },
-  heading: {
-    fontSize: 24,
+
+  profileSection: {
+    alignItems: "center",
+    marginBottom: 25,
+  },
+
+  name: {
+    fontSize: 22,
     fontWeight: "700",
-    marginBottom: 20,
+    marginTop: 10,
   },
-  detail: {
+
+  email: {
+    color: "gray",
+    marginTop: 4,
+  },
+
+  card: {
+    borderRadius: 16,
+    marginBottom: 30,
+  },
+
+  row: {
     flexDirection: "row",
-    marginVertical: 8,
+    justifyContent: "space-between",
+    marginVertical: 10,
   },
+
   label: {
+    color: "gray",
     fontWeight: "600",
-    width: 100,
   },
+
   value: {
-    flex: 1,
+    fontWeight: "600",
   },
+
+  divider: {
+    marginVertical: 6,
+  },
+
+  logoutBtn: {
+    borderRadius: 30,
+  },
+
   center: {
     flex: 1,
     justifyContent: "center",
