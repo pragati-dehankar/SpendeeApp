@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,9 +7,23 @@ import {
 } from "react-native";
 import { useAuth } from "../../context/AuthProvider";
 import { Avatar, Card, Button, Divider } from "react-native-paper";
+import { getUserBalanceSummary } from "../../sql/payments/getSummary";
 
 const AccountDetails = () => {
   const { user, authLoading, logout } = useAuth();
+
+  const [summary, setSummary] = useState({
+    lent: 0,
+    borrowed: 0,
+  });
+
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    getUserBalanceSummary(user.id).then(setSummary);
+  }, [user]);
+
 
   if (authLoading) {
     return (
@@ -20,6 +34,7 @@ const AccountDetails = () => {
     );
   }
 
+ 
   if (!user) {
     return (
       <View style={styles.center}>
@@ -28,10 +43,12 @@ const AccountDetails = () => {
     );
   }
 
+  const totalBalance = summary.lent - summary.borrowed;
+
   return (
     <View style={styles.container}>
 
-      {/* 👤 PROFILE HEADER */}
+     
       <View style={styles.profileSection}>
         <Avatar.Text
           size={80}
@@ -41,7 +58,45 @@ const AccountDetails = () => {
         <Text style={styles.email}>{user.email}</Text>
       </View>
 
-      {/* 📄 DETAILS CARD */}
+   
+      <Card style={styles.card}>
+        <Card.Content>
+
+          <View style={styles.row}>
+            <Text style={styles.label}>You Lent</Text>
+            <Text style={[styles.value, { color: "green" }]}>
+              ₹ {summary.lent}
+            </Text>
+          </View>
+
+          <Divider style={styles.divider} />
+
+          <View style={styles.row}>
+            <Text style={styles.label}>You Borrowed</Text>
+            <Text style={[styles.value, { color: "red" }]}>
+              ₹ {summary.borrowed}
+            </Text>
+          </View>
+
+          <Divider style={styles.divider} />
+
+          <View style={styles.row}>
+            <Text style={styles.label}>Total Balance</Text>
+            <Text
+              style={[
+                styles.value,
+                {
+                  color: totalBalance >= 0 ? "green" : "red",
+                },
+              ]}
+            >
+              ₹ {totalBalance}
+            </Text>
+          </View>
+
+        </Card.Content>
+      </Card>
+
       <Card style={styles.card}>
         <Card.Content>
 
@@ -50,17 +105,10 @@ const AccountDetails = () => {
             <Text style={styles.value}>{user.phone}</Text>
           </View>
 
-          <Divider style={styles.divider} />
-
-          <View style={styles.row}>
-            <Text style={styles.label}>User ID</Text>
-            <Text style={styles.value}>{user.id}</Text>
-          </View>
-
         </Card.Content>
       </Card>
 
-      {/* 🚪 LOGOUT BUTTON */}
+   
       <Button
         mode="contained"
         icon="logout"
@@ -102,7 +150,7 @@ const styles = StyleSheet.create({
 
   card: {
     borderRadius: 16,
-    marginBottom: 30,
+    marginBottom: 20,
   },
 
   row: {
@@ -117,7 +165,7 @@ const styles = StyleSheet.create({
   },
 
   value: {
-    fontWeight: "600",
+    fontWeight: "700",
   },
 
   divider: {
@@ -126,6 +174,7 @@ const styles = StyleSheet.create({
 
   logoutBtn: {
     borderRadius: 30,
+    marginTop: 10,
   },
 
   center: {

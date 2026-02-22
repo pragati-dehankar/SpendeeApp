@@ -54,7 +54,7 @@ const AddNewGroup = () => {
       >
         <View style={styles.container}>
           <View style={styles.row}>
-            <IconButton icon="image-plus" size={35} />
+            {/* <IconButton icon="image-plus" size={35} /> */}
             <TextInput
               mode="outlined"
               placeholder="Group name"

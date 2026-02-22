@@ -8,7 +8,7 @@ export const addNewActivity=async(db,activity,userId)=>{
     console.log("Activity created!",JSON.stringify(activityRecord));
     return activityRecord?.lastInsertedRowId
  } catch (error) {
-    console.log("error in addNewactivit",error);
+    console.log("error in addNewactivity",error);
     throw error
  }
 }
