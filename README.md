@@ -5,6 +5,14 @@ Spendee is a simple expense splitting & money management app that helps users tr
 🔗 Download APK: https://expo.dev/artifacts/eas/wArmNU3KYEsHHYqrs6xbkp.apk
 
 
+
+🧑‍💻 Tech Stack
+
+-React Native (Expo)
+-React Native Paper
+-SQLite
+
+
  ✨ Features
 
 - 👥 Create groups & add members
