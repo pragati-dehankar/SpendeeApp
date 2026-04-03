@@ -2,7 +2,9 @@
 
 Spendee is a simple expense splitting & money management app that helps users track shared expenses, split bills, and manage personal finances with ease.
 
-🔗 Download APK: https://expo.dev/artifacts/eas/wArmNU3KYEsHHYqrs6xbkp.apk
+🔗 Download APK: application-95ea0ddd-4d31-4d0c-83ee-791f34ddb312.apk
+
+link:- https://expo.dev/artifacts/eas/jvGxPpTC273hvhQiS1ExWb.apk
 
 
 
